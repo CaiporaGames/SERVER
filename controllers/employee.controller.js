@@ -6,63 +6,57 @@ const Employee = require('../models/employee.model');
 const { generateCrudMethods } = require('../services');//we hide the index.js here
 const employeeCrud = generateCrudMethods(Employee);
 
-router.get('/', (req, res)=>
+router.get('/', (req, res, next)=>
 {
     employeeCrud.getAll()
     .then(data => res.send(data))
-    .catch(error => console.log(`Error finding employee: ${error}`));
+    .catch(error => next(error));
 });
 
-router.get('/:id',validateDBID, (req, res)=>
+router.get('/:id',validateDBID, (req, res, next)=>
 {
-    employeeCrud.findById(req.params.id)
+    employeeCrud.getById(req.params.id)
     .then(data => 
     {
         if(data)
             res.send(data)
         else
-            res.status(404).json(
-        {
-            error:`No record with given id: ${req.params.id}`
-        });
+            raiseRecord404Error(req, res);
     })
-    .catch(error => console.log(`Error finding employee: ${error}`));
+    .catch(error => next(error));
 });
 
-router.put('/:id',validateDBID, (req, res)=>
+router.put('/:id',validateDBID, (req, res, next)=>
 {
-    employeeCrud.findById(req.params.id)
+    employeeCrud.update(req.params.id)
     .then(data => 
     {
         if(data)
-            res.send(data)
+            res.send(data);
         else
-            res.status(404).json(
-        {
-            error:`No record with given id: ${req.params.id}`
-        });
+            raiseRecord404Error(req, res);
     })
-    .catch(error => console.log(`Error finding employee: ${error}`));
+    .catch(error => next(error));
 });
 
-router.delete('/:id',validateDBID, (req, res)=>
+router.delete('/:id',validateDBID, (req, res, next)=>
 {
-    employeeCrud.findById(req.params.id)
+    employeeCrud.delete(req.params.id)
     .then(data => 
     {
         if(data)
-            res.send(data)
+            res.send(data);
         else
-            raiseRecord404Error(req, res)
+            raiseRecord404Error(req, res);
     })
-    .catch(error => console.log(`Error finding employee: ${error}`));
+    .catch(error => next(error));
 });
 
-router.post('/', (req, res)=>
+router.post('/', (req, res, next)=>
 {
     employeeCrud.create(req.body)
     .then(data => res.status(201).json(data))
-    .catch(error => console.log(`Error creating employee: ${error}`));
+    .catch(error => next(error));//Next will pass the error for the errorHandle middleware
 });
 
 module.exports = router;

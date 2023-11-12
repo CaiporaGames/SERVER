@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 //local imports
 const connectDB = require('./db.js');
 const employeeRoutes = require('./controllers/employee.controller.js');
+const { errorHandler } = require('./middlewares');
 
 const app = express();
 const PORT = 3000;
@@ -11,6 +12,7 @@ const PORT = 3000;
 //middlewares
 app.use(bodyParser.json());
 app.use('/api/employees', employeeRoutes);
+app.use(errorHandler);//catch errors in the above routes
 
 
 connectDB()

@@ -20,4 +20,9 @@ const raiseRecord404Error = (req, res) =>
         error:`No record with given id: ${req.params.id}`
     });
 }
-module.exports = {validateDBID, raiseRecord404Error};
+
+const errorHandler = (error, req, res, next) =>
+{
+    res.status(500).json({error});
+}
+module.exports = {validateDBID, raiseRecord404Error, errorHandler};
