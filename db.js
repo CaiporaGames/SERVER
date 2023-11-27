@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const dbURL = 'mongodb+srv://timoteo:11235813@cluster0.diujz.mongodb.net/autodrive_db?retryWrites=true&w=majority';
+const mongoURI = process.env.MONGO_URI;
+const dbURL = mongoURI;
 
 mongoose.set('strictQuery', false);
 module.exports = () =>
